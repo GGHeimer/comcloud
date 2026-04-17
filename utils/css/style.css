@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+}
+
+.container {
+    padding: 10px;
+    height: 100vh;
+    width: 100vw;
+}
+
+.item-form {
+    padding: 3px;
+}
+
+.titulo {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
