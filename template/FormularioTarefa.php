@@ -6,22 +6,25 @@ class FormularioTarefa {
     private $action;
     private $method;
 
-    public function __construct($titulo, $action, $method) {
+    public function __construct($titulo, $action, $method, $editDesc = '', $editStatus = '') {
         $this->titulo = $titulo;
         $this->action = $action;
         $this->method = $method;
+        $this->editDesc = $editDesc;
+        $this->editStatus = $editStatus;
     }
 
     public function renderizar() {
         $html = '<h2>' . $this->titulo . '</h2>';
         $html .= '<form action="' . $this->action . '" method="' . $this->method . '">';
+        $html .= '<input type="hidden" name="editIndex" value="' . htmlspecialchars($this->editDesc !== '' ? ($_GET['editar'] ?? '') : '') . '">';
         $html .= '<div class="mb-3 col-6">
                   <label for="desc" class="form-label">Descrição</label>
-                  <input type="text" class="form-control" id="desc" name="desc" placeholder="Descrição da tarefa" required>
+                  <input type="text" class="form-control" id="desc" name="desc" placeholder="Descrição da tarefa" value="' . htmlspecialchars($this->editDesc) . '" required>
                 </div>';
         $html .= '<div class="mb-3 col-3">
                   <div class="input-group mb-3">
-                <input type="text" class="form-control" id="status" name="status" aria-label="status" placeholder="Selecione o status" required readonly>
+                <input type="text" class="form-control" id="status" name="status" aria-label="status" placeholder="Selecione o status" value="' . htmlspecialchars($this->editStatus) . '" required readonly>
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Status</button>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#" onclick="document.getElementById(&#039;status&#039;).value=&#039;Pendente&#039;">Pendente</a></li>

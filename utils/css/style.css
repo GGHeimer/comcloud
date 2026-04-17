@@ -6,9 +6,14 @@
 body {
     height: 100vh;
     width: 100vw;
+    & h1 {
+        text-align: center;
+    }
 }
 
 .container {
+    display: flex;
+    flex-direction: column;
     padding: 10px;
     height: 100vh;
     width: 100vw;
@@ -19,6 +24,26 @@ body {
 }
 
 .titulo {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.concluir {
+    padding: 3px;
+}
+
+.excluir {
+    padding: 5px;
+}
+
+.editar {
+    padding: 2px;
+}
+
+footer {
+    display: flex;
+    flex-grow: 0;
     text-align: center;
     align-items: center;
     justify-content: center;

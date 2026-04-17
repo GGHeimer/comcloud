@@ -9,8 +9,19 @@ spl_autoload_register(function ($class_name){
 //constrói a página
 $pagina = new Pagina('Lista de Tarefas - Cloud');
 
+//preenche formulário para edição
+$editDesc = '';
+$editStatus = '';
+if (isset($_GET['editar'])) {
+    $index = (int) $_GET['editar'];
+    if (isset($_SESSION['tarefas'][$index])) {
+        $editDesc = $_SESSION['tarefas'][$index]['desc'];
+        $editStatus = $_SESSION['tarefas'][$index]['status'];
+    }
+}
+
 //constrói o formulário
-$formCadastro = new FormularioTarefa("Inserir Tarefa", "index.php", "post");
+$formCadastro = new FormularioTarefa("Inserir Tarefa", "index.php", "post", $editDesc, $editStatus);
 
 //exclui tarefa da sessão e redireciona
 if (isset($_GET['excluir'])) {
@@ -20,12 +31,30 @@ if (isset($_GET['excluir'])) {
     exit;
 }
 
-//adiciona tarefa recem criada na sessão e redireciona
+//adiciona ou edita tarefa na sessão e redireciona
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $_SESSION['tarefas'][] = [
-        'desc' => $_POST['desc'],
-        'status' => $_POST['status']
-    ];
+    $editIndex = $_POST['editIndex'];
+    if ($editIndex !== '') {
+        $_SESSION['tarefas'][(int)$editIndex] = [
+            'desc' => $_POST['desc'],
+            'status' => $_POST['status']
+        ];
+    } else {
+        $_SESSION['tarefas'][] = [
+            'desc' => $_POST['desc'],
+            'status' => $_POST['status']
+        ];
+    }
+    header('Location: index.php');
+    exit;
+}
+
+//concluir tarefa
+if (isset($_GET['concluir'])) {
+    $index = (int) $_GET['concluir'];
+    if (isset($_SESSION['tarefas'][$index])) {
+        $_SESSION['tarefas'][$index]['status'] = 'Concluído';
+    }
     header('Location: index.php');
     exit;
 }
