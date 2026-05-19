@@ -57,6 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+//exporta tarefas para Lambda via GET
+if (isset($_GET['exportar'])) {
+    $lambdaUrl = 'https://27lzogyye3unltrf4uxnwweh2i0rcclb.lambda-url.sa-east-1.on.aws/';
+    $json = urlencode(json_encode($_SESSION['tarefas'] ?? []));
+    header('Location: ' . $lambdaUrl . '?dados=' . $json);
+    exit;
+}
+
 //concluir tarefa
 if (isset($_GET['concluir'])) {
     $index = (int) $_GET['concluir'];
