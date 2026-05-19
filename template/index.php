@@ -9,6 +9,14 @@ spl_autoload_register(function ($class_name){
 //constrói a página
 $pagina = new Pagina('Lista de Tarefas - Cloud');
 
+//inicializa tarefas padrão se a sessão estiver vazia
+if (empty($_SESSION['tarefas'])) {
+    $_SESSION['tarefas'] = [
+        ['desc' => 'Criar API no API Gateway', 'status' => 'Pendente'],
+        ['desc' => 'Criar função do Lambda para chamar API', 'status' => 'Pendente']
+    ];
+}
+
 //preenche formulário para edição
 $editDesc = '';
 $editStatus = '';

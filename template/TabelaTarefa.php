@@ -1,7 +1,7 @@
 <?php
     class TabelaTarefa {
         private $titulo ;
-        private $tarefas = ["teste"];
+        private $tarefas = [];
 
         public function __construct($titulo, $tarefas) {
         $this->titulo = $titulo;    
@@ -9,6 +9,7 @@
         }
 
         public function renderizar() {
+            //constrói página com tabela e dados
             $html = '<table class="table">';
             $html .= '<thead><tr><th colspan="3">' . '<div class="titulo"><h3>' . $this->titulo . '</h3></div>' . '</th></tr>';
             $html .= '<tr><th>Descrição</th><th>Status</th><th>Ações</th></tr></thead>';
