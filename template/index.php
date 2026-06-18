@@ -9,14 +9,6 @@ spl_autoload_register(function ($class_name){
 //constrói a página
 $pagina = new Pagina('Lista de Tarefas - Cloud');
 
-//inicializa tarefas padrão se a sessão estiver vazia
-if (empty($_SESSION['tarefas'])) {
-    $_SESSION['tarefas'] = [
-        ['desc' => 'Criar API no API Gateway', 'status' => 'Pendente'],
-        ['desc' => 'Criar função do Lambda para chamar API', 'status' => 'Pendente']
-    ];
-}
-
 //preenche formulário para edição
 $editDesc = '';
 $editStatus = '';
@@ -39,6 +31,27 @@ if (isset($_GET['excluir'])) {
     exit;
 }
 
+//importa tarefas da Lambda via fetch
+if (isset($_POST['importar_lambda'])) {
+    $decoded = json_decode($_POST['importar_lambda'], true);
+    // Lambda pode retornar {body: "[...]"}  ou diretamente [...]
+    if (isset($decoded['body'])) {
+        $tarefas = json_decode($decoded['body'], true);
+    } else {
+        $tarefas = $decoded;
+    }
+    if (is_array($tarefas)) {
+        foreach ($tarefas as $tarefa) {
+            $_SESSION['tarefas'][] = [
+                'desc'   => $tarefa['desc']   ?? '',
+                'status' => $tarefa['status'] ?? ''
+            ];
+        }
+    }
+    header('Location: index.php');
+    exit;
+}
+
 //adiciona ou edita tarefa na sessão e redireciona
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $editIndex = $_POST['editIndex'];
@@ -57,15 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-//exporta tarefas para Lambda via GET
-if (isset($_GET['exportar'])) {
-    $lambdaUrl = 'https://27lzogyye3unltrf4uxnwweh2i0rcclb.lambda-url.sa-east-1.on.aws/';
-    $json = urlencode(json_encode($_SESSION['tarefas'] ?? []));
-    header('Location: ' . $lambdaUrl . '?dados=' . $json);
-    exit;
-}
-
-//concluir tarefa
 if (isset($_GET['concluir'])) {
     $index = (int) $_GET['concluir'];
     if (isset($_SESSION['tarefas'][$index])) {
